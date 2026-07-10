@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmed — Jenel Studios</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23221d17'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='17' font-style='italic' fill='%23e8c891' text-anchor='middle'%3EJ%3C/text%3E%3C/svg%3E">
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/jenel.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PS0H5W3ZX7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PS0H5W3ZX7');
+  </script>
+</head>
+<body>
+  <nav class="nav" aria-label="Main">
+    <a class="nav-logo" href="../">Jenel <em>Studios</em></a>
+    <div class="nav-links"><a class="btn btn-ink" href="../book/">Book another</a></div>
+  </nav>
+
+  <main class="book-main wrap" style="max-width: 760px;">
+    <div id="panel">
+      <p class="eyebrow">Finalizing</p>
+      <h1 class="display" style="font-size: clamp(34px, 5.6vw, 60px); margin: 12px 0 16px;">Confirming your <em>booking…</em></h1>
+      <p class="lede">One moment — giving the paperwork a second to catch up.</p>
+      <div class="spin" style="margin-top: 26px;"></div>
+    </div>
+  </main>
+
+  <footer class="footer" style="padding-bottom: 40px;">
+    <div class="wrap footer-bottom" style="border-top:0; margin-top:0; padding-top:0;">
+      <span>© <span id="year">2026</span> Jenel Studios · Dallas, TX</span>
+      <a href="../">← Back to the studio</a>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script>
+  (async () => {
+    const q = new URLSearchParams(location.search);
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const p = q.get("p"), t = q.get("t");
+    const panel = document.getElementById("panel");
+    const TZ = "America/Chicago";
+    const fmtLong = (iso) => new Intl.DateTimeFormat("en-US", { timeZone: TZ, weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date(iso));
+    const fmtTime = (iso) => new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit" }).format(new Date(iso));
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+
+    if (!UUID.test(p || "") || !UUID.test(t || "")) { location.replace("../book/"); return; }
+    const portal = `${window.TM.PORTAL_BASE}/portal.html?p=${encodeURIComponent(p)}&t=${encodeURIComponent(t)}`;
+
+    if (q.get("cancelled")) {
+      panel.innerHTML = `
+        <p class="eyebrow">Checkout cancelled</p>
+        <h1 class="display" style="font-size: clamp(34px, 5.6vw, 60px); margin: 12px 0 16px;">No charge — your card <em>wasn't billed.</em></h1>
+        <p class="lede">Your slot is held for about 30 minutes, so you can still finish the payment. Or pick a different time — no harm done.</p>
+        <div class="hero-ctas" style="margin-top: 26px;">
+          <a class="btn btn-ink" href="${portal}">Finish payment</a>
+          <a class="btn btn-line" style="border-color:var(--line); color:var(--ink);" href="../book/">Pick another time</a>
+        </div>`;
+      return;
+    }
+
+    let status = null;
+    for (let i = 0; i < 10; i++) {
+      try {
+        status = await window.TM.rpc("bk_booking_status", { p_project: p, p_token: t });
+        if (status?.invoice?.status === "paid" || status?.booking?.status === "confirmed") break;
+      } catch (_) { /* transient */ }
+      await new Promise((r) => setTimeout(r, 1800));
+    }
+
+    const b = status?.booking, inv = status?.invoice, paid = inv?.status === "paid" || b?.status === "confirmed";
+    panel.innerHTML = `
+      <p class="eyebrow">${paid ? "Booking confirmed" : "Payment received"}</p>
+      <h1 class="display" style="font-size: clamp(34px, 5.6vw, 60px); margin: 12px 0 16px;">${paid ? `The studio is <em>yours.</em>` : `Almost <em>there.</em>`}</h1>
+      ${b ? `
+      <div class="bk-summary" style="max-width: 520px; margin-bottom: 22px;">
+        <div class="row"><span>Booking</span><b>${esc(b.service_name)}</b></div>
+        <div class="row"><span>Date</span><b>${fmtLong(b.starts_at)}</b></div>
+        <div class="row"><span>Time</span><b>${fmtTime(b.starts_at)} CT · ${b.duration_min >= 60 ? (b.duration_min / 60) + " hr" + (b.duration_min > 60 ? "s" : "") : b.duration_min + " min"}</b></div>
+        ${b.location ? `<div class="row"><span>Address</span><b>${esc(b.location)}</b></div>` : ""}
+      </div>` : ""}
+      <p class="lede">${paid
+        ? "Your confirmation email has the address and access details, and you'll get a reminder before your booking. See you in the light."
+        : "Your payment went through — the confirmation email lands in the next few minutes with the address and access details."}</p>
+      <div class="hero-ctas" style="margin-top: 26px;">
+        <a class="btn btn-ink" href="${portal}">View your booking</a>
+        <a class="btn btn-line" style="border-color:var(--line); color:var(--ink);" href="../">← Back to the studio</a>
+      </div>`;
+    if (paid) { try { window.gtag?.("event", "purchase_confirmed", { service: b?.service_name ?? "studio" }); } catch (_) {} }
+  })();
+  </script>
+</body>
+</html>
