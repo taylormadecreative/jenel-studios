@@ -94,13 +94,22 @@ h3 { font-family: var(--font-d); font-weight: 500; font-size: clamp(20px, 2.4vw,
 @media (max-width: 680px) { .nav-links a:not(.btn) { display: none; } }
 
 /* ---------- hero ---------- */
-.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: clip; padding-bottom: clamp(40px, 7vh, 84px); }
+/* padding-top clears the fixed nav. With min-height + flex-end the hero still
+   bottom-aligns on tall screens, but grows instead of hiding the eyebrow and
+   first headline line behind the nav on short ones. */
+.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: clip; padding-top: clamp(88px, 11vh, 108px); padding-bottom: clamp(40px, 7vh, 84px); }
 .hero-media { position: absolute; inset: 0; z-index: 0; background: var(--linen); }
-.hero-media img { width: 100%; height: 100%; object-fit: cover; }
+.hero-media picture { display: block; position: absolute; inset: 0; }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
+@media (max-width: 767px) { .hero-media img { object-position: center 46%; } }
+/* Dual scrim: horizontal keeps the headline legible on the left, vertical
+   anchors the CTAs/facts at the bottom. Tuned for the working-studio photo —
+   it falls off fast past 60% so the windows and white sweep still read bright.
+   If the hero photo changes, keep both gradients and the .hero-inner shadow. */
 .hero-scrim { position: absolute; inset: 0;
   background:
-    linear-gradient(90deg, rgba(24,19,13,.82) 0%, rgba(24,19,13,.52) 48%, rgba(24,19,13,.22) 100%),
-    linear-gradient(180deg, rgba(24,19,13,.42) 0%, rgba(24,19,13,.14) 34%, rgba(24,19,13,.88) 100%);
+    linear-gradient(90deg, rgba(24,19,13,.84) 0%, rgba(24,19,13,.60) 32%, rgba(24,19,13,.20) 62%, rgba(24,19,13,0) 84%),
+    linear-gradient(180deg, rgba(24,19,13,.30) 0%, rgba(24,19,13,.02) 26%, rgba(24,19,13,.20) 54%, rgba(24,19,13,.84) 100%);
 }
 .hero-inner { position: relative; z-index: 2; width: 100%; color: #fdfaf4; text-shadow: 0 1px 22px rgba(20,15,9,.5); }
 .hero .eyebrow { color: #e8c891; }
@@ -110,11 +119,90 @@ h3 { font-family: var(--font-d); font-weight: 500; font-size: clamp(20px, 2.4vw,
 .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
 .hero .btn-ink { background: #fbf8f2; color: var(--ink); }
 .hero .btn-ink:hover { background: var(--honey); color: #fff; }
-.hero .btn-line { border-color: rgba(251,248,242,.5); color: #fbf8f2; }
-.hero .btn-line:hover { border-color: #e8c891; color: #e8c891; }
+.hero .btn-line {
+  border-color: rgba(251,248,242,.55); color: #fbf8f2;
+  background: rgba(24,19,13,.34);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+}
+.hero .btn-line:hover { border-color: #e8c891; color: #e8c891; background: rgba(24,19,13,.54); }
+/* live availability pill */
+.avail {
+  display: inline-flex; align-items: center; gap: 11px;
+  margin-top: 22px; padding: 11px 20px 11px 16px;
+  border: 1px solid rgba(251,248,242,.38); border-radius: 999px;
+  background: rgba(24,19,13,.42); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+  font-weight: 700; font-size: 14.5px; color: #fbf8f2; letter-spacing: .01em;
+  text-shadow: none; max-width: 100%;
+  transition: border-color .2s, background .2s, transform .22s cubic-bezier(.2,.9,.3,1.3);
+}
+.avail:hover { border-color: #e8c891; background: rgba(24,19,13,.62); transform: translateY(-2px); }
+.avail .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #6fbf73; flex-shrink: 0;
+  box-shadow: 0 0 0 0 rgba(111,191,115,.6); animation: availPulse 2.4s ease-out infinite;
+}
+.avail .avail-t { min-width: 0; }
+.avail .avail-go { color: #e8c891; flex-shrink: 0; }
+@keyframes availPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(111,191,115,.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(111,191,115,0); }
+  100% { box-shadow: 0 0 0 0 rgba(111,191,115,0); }
+}
+/* light-background variant (final CTA section) */
+.avail--light {
+  background: #fffdf9; border-color: var(--line); color: var(--ink);
+  box-shadow: 0 10px 30px -20px rgba(84,58,28,.5);
+}
+.avail--light:hover { background: #fffdf9; border-color: var(--honey); }
+.avail--light .avail-go { color: var(--honey-deep); }
+.avail--light .dot { background: #3f9a55; }
+
 .hero-facts { display: flex; gap: clamp(20px, 4vw, 48px); flex-wrap: wrap; margin-top: clamp(28px, 4vw, 42px); padding-top: 22px; border-top: 1px solid rgba(251,248,242,.25); }
 .hero-facts strong { font-family: var(--font-d); font-size: clamp(19px, 2.4vw, 26px); font-weight: 500; display: block; }
 .hero-facts span { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: #e6dcc8; }
+
+/* The sticky book bar exists below 900px — keep the hero's last row above it.
+   Must match the .bookbar breakpoint, not the phone breakpoint. */
+@media (max-width: 899px) { .hero { padding-bottom: 104px; } }
+
+/* ---------- hero: phones ----------
+   The hero bottom-aligns its content, so on a short viewport any overflow is
+   clipped off the TOP (the eyebrow). Everything here buys vertical room. */
+@media (max-width: 767px) {
+  /* text runs full width on phones — a side gradient just dims the room */
+  .hero-scrim {
+    background: linear-gradient(180deg,
+      rgba(24,19,13,.74) 0%, rgba(24,19,13,.50) 30%,
+      rgba(24,19,13,.56) 56%, rgba(24,19,13,.92) 100%);
+  }
+  .hero h1 { font-size: clamp(33px, 9vw, 46px); max-width: 20ch; }
+  .hero-sub { margin-top: 14px; font-size: 15.5px; line-height: 1.6; }
+  .hero-ctas { margin-top: 22px; gap: 10px; }
+  .hero .btn { padding: 14px 20px; font-size: 14px; }
+  .avail { margin-top: 16px; padding: 10px 15px 10px 13px; font-size: 13.5px; gap: 9px; }
+  .hero-facts {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px 18px; margin-top: 22px; padding-top: 18px;
+  }
+  .hero-facts strong { font-size: 19px; }
+  .hero-facts span { font-size: 10.5px; letter-spacing: .12em; }
+}
+
+/* ---------- trust strip ---------- */
+.trust { background: var(--ink); color: #d9cfc0; }
+.trust-row {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 10px clamp(16px, 3vw, 34px);
+  padding-top: 15px; padding-bottom: 15px;
+  font-size: 13px; font-weight: 700; letter-spacing: .04em;
+}
+.trust-row span { display: flex; align-items: center; gap: 9px; }
+.trust-row span::before {
+  content: ""; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--honey); flex-shrink: 0;
+}
+@media (max-width: 620px) {
+  .trust-row { gap: 8px 18px; font-size: 12.5px; }
+}
 
 /* ---------- rates ---------- */
 .rates { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: clamp(16px, 2.4vw, 26px); }
@@ -137,7 +225,13 @@ a.rate:hover { transform: translateY(-4px); border-color: var(--honey); box-shad
 .gallery { display: grid; grid-template-columns: 1.4fr 1fr; grid-auto-rows: clamp(200px, 30vw, 420px); gap: clamp(12px, 1.8vw, 20px); }
 .gallery img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
 .gallery img:first-child { grid-row: span 2; }
-@media (max-width: 720px) { .gallery { grid-template-columns: 1fr; } .gallery img:first-child { grid-row: auto; } }
+@media (max-width: 720px) {
+  /* one column: let each shot keep its own shape instead of a 200px letterbox */
+  .gallery { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .gallery img { height: auto; aspect-ratio: 4 / 3; }
+  .gallery img:first-child { grid-row: auto; aspect-ratio: 3 / 4; }
+}
+.gal-note { margin-top: 14px; font-size: 14px; color: var(--ink-soft); max-width: 62ch; }
 
 /* ---------- amenity / gear lists ---------- */
 .amen { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: clamp(14px, 2vw, 22px); }

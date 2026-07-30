@@ -10,16 +10,27 @@
   <script>document.documentElement.classList.add("js");</script>
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jenel Studios">
+  <meta property="og:locale" content="en_US">
   <meta property="og:title" content="Jenel Studios — Downtown Dallas Studio Rental, from $60/hr">
   <meta property="og:description" content="Natural light, hardwood floors, big windows. Book by the hour, half day, or full day — pay online, confirmed instantly.">
-  <meta property="og:image" content="https://studio.taylormadecreative.net/assets/img/studio-2.jpg">
+  <meta property="og:image" content="https://studio.taylormadecreative.net/assets/img/og-jenel-studios.jpg">
+  <meta property="og:image:secure_url" content="https://studio.taylormadecreative.net/assets/img/og-jenel-studios.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jenel Studios — a downtown Dallas rental studio set up with lights, a white backdrop, and big windows looking onto the skyline. From $60/hr.">
   <meta property="og:url" content="https://studio.taylormadecreative.net/">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jenel Studios — Downtown Dallas Studio Rental, from $60/hr">
+  <meta name="twitter:description" content="Natural light, hardwood floors, big windows. Book by the hour, half day, or full day — pay online, confirmed instantly.">
+  <meta name="twitter:image" content="https://studio.taylormadecreative.net/assets/img/og-jenel-studios.jpg">
+  <meta name="twitter:image:alt" content="Jenel Studios — a downtown Dallas rental studio set up with lights, a white backdrop, and big windows looking onto the skyline.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/jenel.css?v=2">
+  <link rel="stylesheet" href="css/jenel.css?v=3">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PS0H5W3ZX7"></script>
   <script>
@@ -37,7 +48,11 @@
     "name": "Jenel Studios",
     "description": "Natural-light rental studio in downtown Dallas — hardwood floors, big windows, kitchen access. Bookable by the hour, half day, or full day for photoshoots, content days, workshops, yoga classes, and small intimate events.",
     "url": "https://studio.taylormadecreative.net/",
-    "image": "https://studio.taylormadecreative.net/assets/img/studio-2.jpg",
+    "image": [
+      "https://studio.taylormadecreative.net/assets/img/studio-now-wide.jpg",
+      "https://studio.taylormadecreative.net/assets/img/studio-now.jpg",
+      "https://studio.taylormadecreative.net/assets/img/studio-2.jpg"
+    ],
     "areaServed": { "@type": "Place", "name": "Dallas, TX" },
     "priceRange": "$60–$600",
     "sameAs": ["https://www.instagram.com/jenelstudios/"],
@@ -85,25 +100,50 @@
   <!-- hero -->
   <header class="hero">
     <div class="hero-media" aria-hidden="true">
-      <img src="assets/img/studio-2.jpg" alt="" fetchpriority="high">
+      <picture>
+        <source media="(max-width: 767px)" type="image/webp" srcset="assets/img/studio-now-tall.webp">
+        <source media="(max-width: 767px)" srcset="assets/img/studio-now-tall.jpg">
+        <source type="image/webp" sizes="100vw"
+                srcset="assets/img/studio-now-wide-1600.webp 1600w, assets/img/studio-now-wide.webp 2400w">
+        <img src="assets/img/studio-now-wide.jpg" alt="" width="2400" height="1500"
+             sizes="100vw"
+             srcset="assets/img/studio-now-wide-1600.jpg 1600w, assets/img/studio-now-wide.jpg 2400w"
+             fetchpriority="high" decoding="async">
+      </picture>
       <div class="hero-scrim"></div>
     </div>
     <div class="wrap hero-inner">
       <p class="eyebrow">Downtown Dallas · Natural light · From $60/hr</p>
       <h1 class="display">A room that makes <em>everything</em> look good.</h1>
-      <p class="hero-sub">Jenel Studios is a sunlit rental space with original hardwood floors, big windows, and room to create — book it by the hour, pay online, and it's yours. Photoshoots, content days, workshops, yoga, small gatherings.</p>
+      <p class="hero-sub">A sunlit rental studio with original hardwood floors, oversized windows, and room to work. Pick a real open slot, pay by card, and the address hits your inbox the second you book.</p>
       <div class="hero-ctas">
         <a class="btn btn-ink" href="book/">Book the studio</a>
         <a class="btn btn-line" href="#rates">See the rates</a>
       </div>
+      <a class="avail" href="book/?service=studio-hourly" id="availPill">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="avail-t" id="availText">See this week's open times</span>
+        <span class="avail-go" aria-hidden="true">→</span>
+      </a>
       <div class="hero-facts">
         <div><strong>$60/hr</strong><span>weekdays</span></div>
         <div><strong>$75/hr</strong><span>weekends</span></div>
-        <div><strong>17′ × 15′</strong><span>main room + open kitchen</span></div>
+        <div><strong>17′ × 15′</strong><span>main room + kitchen</span></div>
         <div><strong>60 sec</strong><span>to book online</span></div>
       </div>
     </div>
   </header>
+
+  <!-- trust strip -->
+  <div class="trust" aria-label="How booking works">
+    <div class="wrap trust-row">
+      <span>Live calendar — real open slots</span>
+      <span>Secure card payment</span>
+      <span>Instant confirmation</span>
+      <span>Address sent on booking</span>
+      <span>No deposit, no back-and-forth</span>
+    </div>
+  </div>
 
   <!-- rates -->
   <section class="act" id="rates">
@@ -151,10 +191,14 @@
         </div>
       </div>
       <div class="gallery reveal">
-        <img src="assets/img/studio-2.jpg" alt="Sunlit studio with big windows and original hardwood floors">
-        <img src="assets/img/studio-1.jpg" alt="Studio corner with wood floors and downtown views">
-        <img src="assets/img/studio-3.jpg" alt="Kitchen area inside the studio">
+        <img src="assets/img/studio-now.jpg" width="1400" height="2100" loading="lazy" decoding="async"
+             alt="The studio mid-shoot — a white backdrop swept across the hardwood, lights and stands set up, and downtown Dallas through the windows">
+        <img src="assets/img/studio-1.jpg" loading="lazy" decoding="async"
+             alt="The open kitchen and dining area — granite island, full cabinets, sink and fridge, with windows onto downtown">
+        <img src="assets/img/studio-2.jpg" loading="lazy" decoding="async"
+             alt="The same main room cleared out — bare hardwood floors, big windows, and track lighting">
       </div>
+      <p class="gal-note">Set up for a shoot, the open kitchen and dining area, and the main room cleared for classes, workshops, and events.</p>
       <div class="amen" style="margin-top: clamp(24px, 3.5vw, 40px);">
         <div class="amen-card reveal"><h3>Big natural light</h3><p>Oversized windows with downtown views pour daylight across the room, backed by adjustable track lighting for evenings.</p></div>
         <div class="amen-card reveal reveal-d1"><h3>Original hardwood</h3><p>Warm, textured floors that photograph beautifully — portraits, movement, flat-lays, product.</p></div>
@@ -257,9 +301,15 @@
     <div class="wrap" style="text-align:center;">
       <p class="eyebrow reveal">The calendar is live</p>
       <h2 class="display reveal" style="margin: 10px auto 16px; max-width: 16ch;">Your next shoot starts <em>here.</em></h2>
+      <p class="lede reveal" style="margin: 0 auto 26px; max-width: 46ch;">Pick a block, take a real open slot, pay by card. Confirmation and the address land in your inbox immediately.</p>
       <div class="hero-ctas reveal reveal-d1" style="justify-content:center;">
         <a class="btn btn-ink" href="book/">Book the studio</a>
       </div>
+      <a class="avail avail--light reveal reveal-d2" href="book/?service=studio-hourly" id="availPill2" style="margin-top:22px;">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="avail-t">See this week's open times</span>
+        <span class="avail-go" aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
 
@@ -285,10 +335,11 @@
 
   <!-- mobile sticky book bar -->
   <div class="bookbar" role="complementary">
-    <div><b>From $60/hr</b><small>Downtown Dallas studio</small></div>
+    <div><b>From $60/hr</b><small id="bookbarNote">Live calendar · pay online</small></div>
     <a class="btn" href="book/">Book now</a>
   </div>
 
   <script src="js/config.js" defer></script>
+  <script src="js/home.js" defer></script>
 </body>
 </html>
