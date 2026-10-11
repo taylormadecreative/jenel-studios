@@ -47,6 +47,11 @@
     ((slotIso && svc.weekend_price_cents != null && isWeekendCT(slotIso))
       ? svc.weekend_price_cents : svc.price_cents);
   const isStudio = (svc) => (svc?.slug ?? "").startsWith("studio-");
+  const isPodcast = (svc) => svc?.slug === "studio-podcast";
+  // add-ons are scoped per service (bk_addons.services): gear for room rentals,
+  // the episode edit for podcast sessions. Rows without a list apply everywhere.
+  const addonsFor = (svc) => isStudio(svc)
+    ? state.addons.filter((a) => !a.services || a.services.includes(svc.slug)) : [];
   const isMobile = () => matchMedia("(max-width: 820px)").matches;
   const track = (name, params) => { try { window.gtag?.("event", name, params); } catch (_) { /* analytics never blocks booking */ } };
 
@@ -83,7 +88,7 @@
     const sessions = state.services;
     const card = (s) => `
       <button class="svc-card" data-slug="${esc(s.slug)}">
-        <span class="k">${s.slug.includes('hourly') ? 'BY THE HOUR' : s.slug.includes('half') ? 'HALF DAY' : 'FULL DAY'}</span>
+        <span class="k">${isPodcast(s) ? 'PODCAST' : s.slug.includes('hourly') ? 'BY THE HOUR' : s.slug.includes('half') ? 'HALF DAY' : 'FULL DAY'}</span>
         <h3>${esc(s.name)}</h3>
         <p>${esc(s.tagline || "")}</p>
         <span class="price">${
@@ -280,6 +285,8 @@
   function renderDetails() {
     setStep(3);
     const isSession = state.svc.kind === "session";
+    const askLocation = isSession && !isStudio(state.svc);
+    const addons = addonsFor(state.svc);
     const d = state.details;
     host.innerHTML = `
       <section aria-label="Your details">
@@ -291,9 +298,9 @@
             <input id="fEmail" name="email" type="email" required maxlength="200" autocomplete="email" value="${esc(d.email)}"></div>
           <div class="bk-field"><label for="fPhone">Phone (optional)</label>
             <input id="fPhone" name="phone" type="tel" maxlength="40" autocomplete="tel" value="${esc(d.phone)}"></div>
-          ${isSession ? `
+          ${askLocation ? `
           <div class="bk-field"><label for="fLoc">Location preference (optional)</label>
-            <input id="fLoc" name="location" maxlength="240" placeholder="Studio, your location, or not sure yet" value="${esc(d.location)}"></div>` : `
+            <input id="fLoc" name="location" maxlength="240" placeholder="Studio, your location, or not sure yet" value="${esc(d.location)}"></div>` : isSession ? "" : `
           <div class="bk-field"><label for="fCompany">Company / brand (optional)</label>
             <input id="fCompany" name="company" maxlength="160" value="${esc(d.company)}"></div>
           <div class="bk-field"><label for="fBudget">Budget range</label>
@@ -305,15 +312,17 @@
               <option${d.budget === "$5,000+" ? " selected" : ""}>$5,000+</option>
             </select></div>`}
           <div class="bk-field"><label for="fNotes">${isSession ? "Anything I should know? (optional)" : "Tell me about the project *"}</label>
-            <textarea id="fNotes" name="notes" rows="4" maxlength="3000" ${isSession ? "" : "required"} placeholder="${isSession ? "Looks you want, references, questions…" : "What are we making? Goals, timeline, references…"}">${esc(d.notes)}</textarea></div>
-          ${isStudio(state.svc) && state.addons.length ? `
-          <div class="bk-field"><label>Rent gear with the space (added to your total)</label>
-            ${state.addons.map((a) => `
-            <label style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--paper);cursor:pointer;margin-bottom:8px;">
+            <textarea id="fNotes" name="notes" rows="4" maxlength="3000" ${isSession ? "" : "required"} placeholder="${isPodcast(state.svc) ? "Show name, who's on the mic, questions…" : isSession ? "Looks you want, references, questions…" : "What are we making? Goals, timeline, references…"}">${esc(d.notes)}</textarea></div>
+          ${addons.length ? `
+          <div class="bk-field"><label>${isPodcast(state.svc) ? "Add the edit (added to your total)" : "Rent gear with the space (added to your total)"}</label>
+            ${addons.map((a) => `
+            <label class="bk-check" style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--paper);cursor:pointer;margin-bottom:8px;">
               <input type="checkbox" name="addon" value="${esc(a.slug)}" ${(d.addons || []).includes(a.slug) ? "checked" : ""} style="margin-top:3px;accent-color:var(--gold);">
               <span>${esc(a.name)} — <b style="color:var(--gold);">${a.price_cents != null ? money(a.price_cents) : "priced on request"}</b></span>
             </label>`).join("")}
-            <p class="bk-note" style="margin-top:8px;">Bring your own cameras — there are none on site.</p>
+            <p class="bk-note" style="margin-top:8px;">${isPodcast(state.svc)
+              ? "One full episode, edited with your logo and branding, 3–4 day turnaround. Have your logo and branding with you at the shoot."
+              : "Bring your own cameras — there are none on site."}</p>
           </div>` : ""}
           <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--smoke);cursor:pointer;">
             <input type="checkbox" name="subscribe" ${d.subscribe ? "checked" : ""} style="margin-top:3px;accent-color:var(--gold);">
@@ -333,7 +342,7 @@
       state.details = {
         ...state.details,
         name: f.name.value, email: f.email.value, phone: f.phone.value,
-        location: isSession ? f.location.value : state.details.location,
+        location: askLocation ? f.location.value : state.details.location,
         company: isSession ? state.details.company : f.company.value,
         budget: isSession ? state.details.budget : f.budget.value,
         notes: f.notes.value,
@@ -350,7 +359,7 @@
       if (!isSession && !f.notes.value.trim()) return showErr(err, "Tell me a little about the project.", f.notes);
       state.details = {
         name: f.name.value.trim(), email, phone: f.phone.value.trim(),
-        location: isSession ? f.location.value.trim() : "",
+        location: askLocation ? f.location.value.trim() : "",
         company: isSession ? "" : f.company.value.trim(),
         budget: isSession ? "" : f.budget.value,
         notes: f.notes.value.trim(),
@@ -377,7 +386,7 @@
     setStep(4);
     const isSession = state.svc.kind === "session";
     const picked = (state.details.addons || [])
-      .map((slug) => state.addons.find((a) => a.slug === slug)).filter(Boolean);
+      .map((slug) => addonsFor(state.svc).find((a) => a.slug === slug)).filter(Boolean);
     const addonTotal = picked.reduce((n, a) => n + (a.price_cents ?? 0), 0);
     const amount = amountFor(state.svc, state.slot) + addonTotal;
     const addons = picked.map((a) => `${a.name}${a.price_cents == null ? " (priced on request)" : ""}`);
@@ -427,7 +436,10 @@
           p_phone: state.details.phone || null,
           p_location: state.details.location || null,
           p_details: state.details.notes || null,
-          p_addons: state.details.addons?.length ? state.details.addons : null,
+          p_addons: (() => {
+            const ok = (state.details.addons || []).filter((slug) => addonsFor(state.svc).some((a) => a.slug === slug));
+            return ok.length ? ok : null;
+          })(),
         });
         state.bkCache = { key: bkKey, bk };
       }
