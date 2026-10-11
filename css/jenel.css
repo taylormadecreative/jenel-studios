@@ -225,13 +225,16 @@ a.rate:hover { transform: translateY(-4px); border-color: var(--honey); box-shad
 .act--ink { background: var(--ink); color: #f3ecdf; }
 .act--ink .display em { font-style: italic; color: #e8c891; }
 .act--ink .lede { color: #d9cfc0; }
-.pod { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.pod { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
 @media (max-width: 860px) { .pod { grid-template-columns: 1fr; } }
-.pod-copy h2 { margin: 12px 0 18px; max-width: 14ch; }
+.pod-head h2 { margin-top: 12px; max-width: 14ch; }
+.pod-head .lede { max-width: 38ch; }
+.pod-photo { margin-bottom: clamp(32px, 5vw, 64px); }
+.pod-photo img { width: 100%; height: auto; border-radius: 22px; background: #2c261f; }
 .pod-eyebrow { color: #e8c891; display: inline-flex; align-items: center; gap: 10px; }
 /* static "rec" light — nothing here is live, so it doesn't pulse (the availability dot does) */
 .rec { width: 9px; height: 9px; border-radius: 50%; background: #e0583a; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(224,88,58,.18); }
-.pod-points { list-style: none; margin-top: clamp(24px, 3vw, 34px); border-top: 1px solid rgba(247,243,236,.16); }
+.pod-points { list-style: none; border-top: 1px solid rgba(247,243,236,.16); }
 .pod-points li { display: grid; grid-template-columns: minmax(0, 13ch) minmax(0, 1fr); gap: 6px 22px; padding: 16px 0; border-bottom: 1px solid rgba(247,243,236,.16); }
 .pod-points b { font-family: var(--font-d); font-weight: 500; font-size: 19px; color: #fbf8f2; line-height: 1.3; }
 .pod-points span { color: #cfc4b4; font-size: 15.5px; }

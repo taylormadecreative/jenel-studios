@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/jenel.css?v=5">
+  <link rel="stylesheet" href="css/jenel.css?v=6">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PS0H5W3ZX7"></script>
   <script>
@@ -51,7 +51,8 @@
     "image": [
       "https://studio.taylormadecreative.net/assets/img/studio-now-wide.jpg",
       "https://studio.taylormadecreative.net/assets/img/studio-now.jpg",
-      "https://studio.taylormadecreative.net/assets/img/studio-2.jpg"
+      "https://studio.taylormadecreative.net/assets/img/studio-2.jpg",
+      "https://studio.taylormadecreative.net/assets/img/podcast-set-wide.jpg"
     ],
     "areaServed": { "@type": "Place", "name": "Dallas, TX" },
     "priceRange": "$60–$600",
@@ -189,28 +190,45 @@
 
   <!-- podcast sessions -->
   <section class="act act--ink" id="podcast">
-    <div class="wrap pod">
-      <div class="pod-copy reveal">
-        <p class="eyebrow pod-eyebrow"><span class="rec" aria-hidden="true"></span>New · Podcast sessions</p>
-        <h2 class="display">Just bring the <em>conversation.</em></h2>
+    <div class="wrap">
+      <div class="act-head pod-head reveal">
+        <div>
+          <p class="eyebrow pod-eyebrow"><span class="rec" aria-hidden="true"></span>New · Podcast sessions</p>
+          <h2 class="display">Just bring the <em>conversation.</em></h2>
+        </div>
         <p class="lede">Our set, our cameras, our mics, and we run the recording. You and your guests just talk.</p>
-        <ul class="pod-points">
+      </div>
+      <figure class="pod-photo reveal">
+        <picture>
+          <source media="(max-width: 767px)" type="image/webp" srcset="assets/img/podcast-set-tall.webp">
+          <source media="(max-width: 767px)" srcset="assets/img/podcast-set-tall.jpg">
+          <source type="image/webp" sizes="(min-width: 1180px) 1036px, 100vw"
+                  srcset="assets/img/podcast-set-wide-1200.webp 1200w, assets/img/podcast-set-wide.webp 2000w">
+          <img src="assets/img/podcast-set-wide.jpg" width="2000" height="1125"
+               sizes="(min-width: 1180px) 1036px, 100vw"
+               srcset="assets/img/podcast-set-wide-1200.jpg 1200w, assets/img/podcast-set-wide.jpg 2000w"
+               loading="lazy" decoding="async"
+               alt="A podcast recording at Jenel Studios: two guests on a leather couch, mics on boom arms in front of them, downtown Dallas through the window behind">
+        </picture>
+      </figure>
+      <div class="pod">
+        <ul class="pod-points reveal">
           <li><b>Book it like the studio</b><span>Same live calendar, by the hour. Pay online and you're confirmed instantly.</span></li>
           <li><b>Walk in and record</b><span>The address and access details come with your confirmation.</span></li>
           <li><b>Take your files home</b><span>Bring a drive, or download your raw files from Dropbox.</span></li>
           <li><b>Want it edited?</b><span>Add the edit at checkout and get one full episode back with your logo and branding.</span></li>
         </ul>
-      </div>
-      <div class="pod-card reveal reveal-d1">
-        <span class="tag">Podcast session</span>
-        <p class="price">$65<small> /hr weekday</small><br>$75<small> /hr weekend</small></p>
-        <p class="pod-incl">Raw files included. Bring a drive or download them from Dropbox.</p>
-        <div class="pod-edit">
-          <div class="pod-edit-row"><b>Add the edit</b><span>$100<small> per episode</small></span></div>
-          <p>One full episode, edited with your logo and branding. 3–4 day turnaround.</p>
-          <p class="pod-req"><strong>Getting the edit?</strong> Have your logo and branding with you at the shoot.</p>
+        <div class="pod-card reveal reveal-d1">
+          <span class="tag">Podcast session</span>
+          <p class="price">$65<small> /hr weekday</small><br>$75<small> /hr weekend</small></p>
+          <p class="pod-incl">Raw files included. Bring a drive or download them from Dropbox.</p>
+          <div class="pod-edit">
+            <div class="pod-edit-row"><b>Add the edit</b><span>$100<small> per episode</small></span></div>
+            <p>One full episode, edited with your logo and branding. 3–4 day turnaround.</p>
+            <p class="pod-req"><strong>Getting the edit?</strong> Have your logo and branding with you at the shoot.</p>
+          </div>
+          <a class="btn btn-ink" href="book/?service=studio-podcast">Book a podcast session</a>
         </div>
-        <a class="btn btn-ink" href="book/?service=studio-podcast">Book a podcast session</a>
       </div>
     </div>
   </section>
