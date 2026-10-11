@@ -321,7 +321,7 @@
               <span>${esc(a.name)} — <b style="color:var(--gold);">${a.price_cents != null ? money(a.price_cents) : "priced on request"}</b></span>
             </label>`).join("")}
             <p class="bk-note" style="margin-top:8px;">${isPodcast(state.svc)
-              ? "One full episode, edited with your logo and branding, 3–4 day turnaround. Have your logo and branding with you at the shoot."
+              ? "One full episode, edited with your logo and branding, 3–4 day turnaround. Have your logo and branding with you at the shoot. Either way, your raw files are yours: bring a drive or download them from Dropbox."
               : "Bring your own cameras — there are none on site."}</p>
           </div>` : ""}
           <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--smoke);cursor:pointer;">
