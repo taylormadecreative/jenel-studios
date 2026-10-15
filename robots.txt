@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /success/
 
-Sitemap: https://studio.taylormadecreative.net/sitemap.xml
+Sitemap: https://jenelstudios.com/sitemap.xml
