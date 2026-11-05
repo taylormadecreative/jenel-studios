@@ -6,6 +6,8 @@
    bk_submit_inquiry, then the bk-create-checkout edge function → Stripe. */
 (() => {
   const TM = window.TM;
+  const foundField = (d) => (window.TMFound ? window.TMFound.field(d.foundVia) : "");
+  const withFound = (text) => (window.TMFound ? window.TMFound.append(text, state.details.foundVia) : text);
   const TZ = "America/Chicago";
   const host = document.getElementById("stepHost");
   const stepsBar = document.getElementById("bookSteps");
@@ -324,6 +326,7 @@
               ? "One full episode, edited with your logo and branding, 3–4 day turnaround. Have your logo and branding with you at the shoot. Either way, your raw files are yours: bring a drive or download them from Dropbox."
               : "Bring your own cameras — there are none on site."}</p>
           </div>` : ""}
+          ${foundField(d)}
           <label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--smoke);cursor:pointer;">
             <input type="checkbox" name="subscribe" ${d.subscribe ? "checked" : ""} style="margin-top:3px;accent-color:var(--gold);">
             <span>Keep me in the loop — occasional studio news, new work, and open dates. No spam, unsubscribe anytime.</span>
@@ -346,6 +349,7 @@
         company: isSession ? state.details.company : f.company.value,
         budget: isSession ? state.details.budget : f.budget.value,
         notes: f.notes.value,
+        foundVia: f.foundVia ? f.foundVia.value : "",
         subscribe: f.subscribe.checked,
         addons: [...f.querySelectorAll('input[name="addon"]:checked')].map((el) => el.value),
       };
@@ -363,6 +367,7 @@
         company: isSession ? "" : f.company.value.trim(),
         budget: isSession ? "" : f.budget.value,
         notes: f.notes.value.trim(),
+        foundVia: f.foundVia ? f.foundVia.value : "",
         subscribe: f.subscribe.checked,
         addons: [...f.querySelectorAll('input[name="addon"]:checked')].map((el) => el.value),
       };
@@ -435,7 +440,7 @@
           p_email: state.details.email,
           p_phone: state.details.phone || null,
           p_location: state.details.location || null,
-          p_details: state.details.notes || null,
+          p_details: withFound(state.details.notes) || null,
           p_addons: (() => {
             const ok = (state.details.addons || []).filter((slug) => addonsFor(state.svc).some((a) => a.slug === slug));
             return ok.length ? ok : null;
@@ -476,7 +481,7 @@
     const err = document.getElementById("payErr");
     btn.innerHTML = `<span class="spin"></span> Sending…`;
     try {
-      const notes = `Service requested: ${state.svc.name}\n\n${state.details.notes}`;
+      const notes = withFound(`Service requested: ${state.svc.name}\n\n${state.details.notes}`);
       const res = await TM.rpc("bk_submit_inquiry", {
         p_name: state.details.name,
         p_email: state.details.email,
