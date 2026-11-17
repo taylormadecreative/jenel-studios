@@ -42,7 +42,7 @@
       s.src = "https://www.googletagmanager.com/gtag/js?id=G-PS0H5W3ZX7";
       document.head.appendChild(s);
       gtag("js", new Date());
-      gtag("config", "G-PS0H5W3ZX7");
+      gtag("config", "G-PS0H5W3ZX7", { content_group: "Jenel Studios" });
     })();
   </script>
 </head>
@@ -122,7 +122,21 @@
         <a class="btn btn-ink" href="${portal}">View your booking</a>
         <a class="btn btn-line" style="border-color:var(--line); color:var(--ink);" href="../">← Back to the studio</a>
       </div>`;
-    if (paid) { try { window.gtag?.("event", "purchase_confirmed", { service: b?.service_name ?? "studio" }); } catch (_) {} }
+    // Google's standard purchase event, with the amount paid, so revenue shows per
+    // traffic source. Sent once per invoice: a reload of this page is not a second sale.
+    if (paid) {
+      try {
+        const txn = String(inv?.id ?? b?.id ?? p), key = "tm-purchase-" + txn;
+        let sent = false;
+        try { sent = localStorage.getItem(key) === "1"; localStorage.setItem(key, "1"); } catch (_) { /* storage blocked: Google still drops a repeated transaction_id */ }
+        if (!sent) {
+          const name = b?.service_name ?? "studio", cents = Number(inv?.amount_cents);
+          const sale = { transaction_id: txn, service: name, items: [{ item_name: name, quantity: 1 }] };
+          if (Number.isFinite(cents) && cents > 0) { sale.currency = "USD"; sale.value = cents / 100; sale.items[0].price = cents / 100; }
+          window.gtag?.("event", "purchase", sale);
+        }
+      } catch (_) { /* analytics never blocks the confirmation */ }
+    }
   })();
   </script>
 </body>
